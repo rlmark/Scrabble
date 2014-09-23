@@ -1,5 +1,4 @@
 class Scrabble
-  @@all_words = {}
 
   # Creates hash of letters and corresponding values
   def self.values
@@ -28,26 +27,46 @@ class Scrabble
     total
   end
 
+  # IN FUTURE: Make this into a new function, for now, just make things work
+  # def create_hash(array_of_words)
+  #   all_words = {}
+  #   array_of_words.each { |word| all_words[word] = score(word) }
+  #   return all_words
+  # end
+
   # Returns the word with the highest score
   def self.highest_score_from(array_of_words)
-    array_of_words.each { |word| @@all_words[word] = score(word) }
-    # puts "The all_words hash might be useful #{@@all_words}"
-    if tie_checker
-    else
-      @@all_words.max_by{ |k,v| v }[0]
-    end
+    all_words = {}
+    array_of_words.each { |word| all_words[word] = score(word) }
+    tie_checker(all_words)
+    #puts "this should be the winner if no tie #{all_words.max_by{ |k,v| v }[0]}"
+    #all_words.max_by{ |k,v| v }[0]
   end
 
   # In the event of a tie, returns word with highest score in fewest tiles
-  def self.tie_checker
-    totals = @@all_words.values
-    # puts "these are the key totals #{totals}"
+  def self.tie_checker(hash_from_highest_score)
+    totals = hash_from_highest_score.values
+    #puts "these are the totals as values #{totals}"
     winner = totals.find_all { |v| v == totals.max }
-    # puts "The max totals are #{winner}"
+    #puts "The max totals are #{winner}"
     if winner.length > 1
-      winners = @@all_words.select { |word, total| total == winner[0] }
-      # puts "the winning word is #{winners.keys.max}"
-      return winners.keys.max
+      winners = hash_from_highest_score.select { |word, total| total == winner[0] }
+      puts "The value of winners is #{winners}"
+      tie_breaker = winners.keys.sort_by { |word| word.length }
+      puts "tie_breaker is #{tie_breaker}"
+      puts "tie_breaker should be longest #{tie_breaker[-1]}"
+      return tie_breaker[-1]
+    else
+      hash_from_highest_score.max_by{ |k,v| v }[0]
+    end
+  end
+
+  def self.twice_tied(tie_breaker)
+    # set variable to longest word.
+    longest_word = tie_breaker.max_by {|word| word.length}
+    multi =  tie_breaker.find_all {|word| word.length == longest_word }
+    if multi.length > 1
+      puts "There are two possible winners, now find the first one"
     end
   end
 end
@@ -55,11 +74,8 @@ end
 
 ######### FOR TESTING PURPOSES #########
 
-array = ["aaaaaaaaaaaa", "Yellow", "Hippo", "face", "a"]
-Scrabble.highest_score_from(array)
-Scrabble.tie_checker
-
-puts "#{Scrabble.tie_checker}"
+#array = ["aaaaaatttttt","Ssaaaaaaaaaa", "Yellow", "Aaaaaaaaaaaa", "Hippo", "face", "a"]
+#puts Scrabble.highest_score_from(array)
 
 
 
@@ -67,25 +83,23 @@ puts "#{Scrabble.tie_checker}"
 
 
 
-
+# def twice_tied(winners)
+#   if winners.keys.find_all {|word| word.length}.length > 1
+#     puts "There is more than one winner"
+#   end
+# Create a function to be embedded within if statement of tie_checker
+# which looks at the order of the @@all_words array and puts in the first one.
 
 # Alternate idea: To avoid nested loops, create giant hash of values and just check if
 # user's word is equal to a key in the hash. Then return value
-#{"A" => 1, "E" => 1, "I" => 1, "O" => 1, "U" => 1, "L" => 1, "N" => 1, "R" => 1, "S" => 1, "T" => 1,}
+#{
+#"A" => 1, "E" => 1,
+#"I" => 1, "O" => 1,
+#"U" => 1, "L" => 1,
+#"N" => 1, "R" => 1,
+#"S" => 1, "T" => 1,
+#}
 
-
-# Do I really want to make these values dependent on instances? Not really. See above
-# def initialize
-#   @letter_val = {
-#     1 => ["A", "E", "I", "O", "U", "L", "N", "R", "S", "T"],
-#     2 => ["D", "G"],
-#     3 => ["B", "C", "M", "P"],
-#     4 => ["F", "H", "V", "W", "Y"],
-#     5 => ["K"],
-#     8 => ["J", "X"],
-#     10 => ["Q", "Z"]
-#   }
-# end
 
 # Returns scored value of user's word
   # Alternate idea: From giant hash,
