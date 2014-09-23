@@ -60,6 +60,6 @@ describe "Scrabble" do
     end
   end
 
-  ##### NOTE: Tests are broken... it keep pulling from original array on line 37
+  ##### NOTE: currently working on making last test here pass. 
 
 end

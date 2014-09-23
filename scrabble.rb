@@ -27,46 +27,42 @@ class Scrabble
     total
   end
 
-  # IN FUTURE: Make this into a new function, for now, just make things work
-  # def create_hash(array_of_words)
-  #   all_words = {}
-  #   array_of_words.each { |word| all_words[word] = score(word) }
-  #   return all_words
-  # end
-
   # Returns the word with the highest score
   def self.highest_score_from(array_of_words)
     all_words = {}
     array_of_words.each { |word| all_words[word] = score(word) }
     tie_checker(all_words)
-    #puts "this should be the winner if no tie #{all_words.max_by{ |k,v| v }[0]}"
-    #all_words.max_by{ |k,v| v }[0]
   end
 
   # In the event of a tie, returns word with highest score in fewest tiles
   def self.tie_checker(hash_from_highest_score)
     totals = hash_from_highest_score.values
-    #puts "these are the totals as values #{totals}"
+            #puts "these are the totals as values #{totals}"
     winner = totals.find_all { |v| v == totals.max }
-    #puts "The max totals are #{winner}"
+            #puts "The max totals are #{winner}"
     if winner.length > 1
       winners = hash_from_highest_score.select { |word, total| total == winner[0] }
-      puts "The value of winners is #{winners}"
+              puts "The value of winners is #{winners}"
       tie_breaker = winners.keys.sort_by { |word| word.length }
-      puts "tie_breaker is #{tie_breaker}"
-      puts "tie_breaker should be longest #{tie_breaker[-1]}"
-      return tie_breaker[-1]
+              puts "tie_breaker is #{tie_breaker}"
+              puts "tie_breaker should be longest #{tie_breaker[-1]}"
+      if twice_tied(tie_breaker, winners)
+        twice_tied(tie_breaker, winners)
+      else
+        return tie_breaker[-1]
+      end
     else
       hash_from_highest_score.max_by{ |k,v| v }[0]
     end
   end
 
-  def self.twice_tied(tie_breaker)
-    # set variable to longest word.
+  def self.twice_tied(tie_breaker, winners)
     longest_word = tie_breaker.max_by {|word| word.length}
-    multi =  tie_breaker.find_all {|word| word.length == longest_word }
+    multi =  tie_breaker.find_all {|word| word.length == longest_word.length }
     if multi.length > 1
       puts "There are two possible winners, now find the first one"
+      puts "this should be the first winning word #{winners.first[0]}"
+      return winners.first[0]
     end
   end
 end
@@ -82,6 +78,18 @@ end
 
 
 
+
+
+
+
+######### CONTENT GRAVEYARD #########
+
+# IN FUTURE: Make this into a new function, for now, just make things work
+# def create_hash(array_of_words)
+#   all_words = {}
+#   array_of_words.each { |word| all_words[word] = score(word) }
+#   return all_words
+# end
 
 # def twice_tied(winners)
 #   if winners.keys.find_all {|word| word.length}.length > 1
@@ -99,7 +107,6 @@ end
 #"N" => 1, "R" => 1,
 #"S" => 1, "T" => 1,
 #}
-
 
 # Returns scored value of user's word
   # Alternate idea: From giant hash,

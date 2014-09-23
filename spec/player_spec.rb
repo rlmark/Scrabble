@@ -6,9 +6,9 @@ describe "Player" do
       expect(Player).to respond_to :new
     end
 
-    let(:name) { "Rebecca" }
+    let(:new_player) { Player.new("Rebecca") }
     it "returns name" do
-      expect(Player.new(name)).to eq "Rebecca"
+      expect(new_player.name).to eq "Rebecca"
     end
   end
 end
