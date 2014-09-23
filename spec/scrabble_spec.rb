@@ -1,4 +1,9 @@
 require './scrabble'
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter "/spec/"
+end
 
 describe "Scrabble" do
   describe "responds to '.new'" do
@@ -49,8 +54,9 @@ describe "Scrabble" do
     end
 
     context "when a tie occurs" do
+      array_with_tie = ["hippo", "yellow", "hi"]
       it "returns the value of the longer word" do
-        expect(Scrabble.tie_checker(array)).to eq
+        expect(Scrabble.highest_score_from(array_with_tie)).to eq "yellow"
       end
     end
   end
