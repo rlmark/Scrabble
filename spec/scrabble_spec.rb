@@ -47,6 +47,12 @@ describe "Scrabble" do
 
     context "when a tie occurs" do
       let(:array_with_tie) { ["hippo", "yellow", "hi"] }
+      let (:hash) { {"hippo" => 12, "yellow" => 12, "hi" => 5} }
+
+      it "returns true when fed an array with equal values" do
+        expect(Scrabble.tie_checker(hash)).to be_truthy
+      end
+
       it "returns the value of the longer word" do
         expect(Scrabble.highest_score_from(array_with_tie)).to eq "yellow"
       end
@@ -59,7 +65,5 @@ describe "Scrabble" do
       end
     end
   end
-
-  ##### NOTE: currently working on making last test here pass. 
 
 end

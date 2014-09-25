@@ -18,11 +18,7 @@ class Scrabble
     w = word.upcase.chars
     total = 0
     values.each do |letters, value|
-      w.each do |user_letter|
-        if letters.include? user_letter
-          total += value
-        end
-      end
+      w.each { |user_letter| (letters.include? user_letter) ? total+= value : nil}
     end
     total
   end
@@ -37,17 +33,12 @@ class Scrabble
   # In the event of a tie, returns word with highest score in fewest tiles
   def self.tie_checker(hash_from_highest_score)
     totals = hash_from_highest_score.values
-            #puts "these are the totals as values #{totals}"
     winner = totals.find_all { |v| v == totals.max }
-            #puts "The max totals are #{winner}"
     if winner.length > 1
       winners = hash_from_highest_score.select { |word, total| total == winner[0] }
-              puts "The value of winners is #{winners}"
       tie_breaker = winners.keys.sort_by { |word| word.length }
-              puts "tie_breaker is #{tie_breaker}"
-              puts "tie_breaker should be longest #{tie_breaker[-1]}"
-      if twice_tied(tie_breaker, winners)
-        twice_tied(tie_breaker, winners)
+      if twice_tied(tie_breaker)
+        winners.first[0]
       else
         return tie_breaker[-1]
       end
@@ -56,13 +47,12 @@ class Scrabble
     end
   end
 
-  def self.twice_tied(tie_breaker, winners)
-    longest_word = tie_breaker.max_by {|word| word.length}
-    multi =  tie_breaker.find_all {|word| word.length == longest_word.length }
-    if multi.length > 1
-      puts "There are two possible winners, now find the first one"
-      puts "this should be the first winning word #{winners.first[0]}"
-      return winners.first[0]
+  # Checks if multiple words have the same value and length
+  def self.twice_tied(tie_breaker)
+    longest_word = tie_breaker.max_by { |word| word.length }
+    multi_win = tie_breaker.find_all { |word| word.length == longest_word.length }
+    if multi_win.length > 1
+      true
     end
   end
 end
